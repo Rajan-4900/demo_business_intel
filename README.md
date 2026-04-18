@@ -80,12 +80,12 @@ When a location is analyzed, the AI generates **High-Potential AI Zones** within
 
 ### 1. Clone & Navigate
 ```powershell
-git clone <your-repo-url>
-cd "final_crowd_heatmap-main/crowd_heatmap_final"
+git clone https://github.com/Rajan-4900/demo_business_intel.git
+cd demo_business_intel
 ```
 
 ### 2. Environment Setup
-Create a `.env` file in the `crowd_heatmap_final` directory:
+Create a `.env` file in the root directory:
 ```env
 GEMINI_API_KEY=your_google_api_key_here
 SECRET_KEY=your_django_secret_key
@@ -123,7 +123,8 @@ Access the platform at `http://127.0.0.1:8000`.
 ## 📁 Project Structure
 
 ```text
-crowd_heatmap_final/
+project_root/
+├── docs/                    # Detailed Guides and Instructions
 ├── crowd_heatmap_project/   # Core Configuration (settings, asgi, wsgi)
 ├── heatmap_app/             # Main Logic (Views, ML models, Heatmap utils)
 ├── users/                   # Custom User Management & Authentication
@@ -147,9 +148,9 @@ crowd_heatmap_final/
 
 ## 🗺️ Documentation Links
 
-- [Detailed Run Instructions](crowd_heatmap_final/RUN_INSTRUCTIONS.md)
-- [Geolocation & Map Guide](crowd_heatmap_final/GEOLOCATION_GUIDE.md)
-- [Auth Structure Summary](crowd_heatmap_final/AUTH_STRUCTURE_SUMMARY.md)
+- [Detailed Run Instructions](docs/RUN_INSTRUCTIONS.md)
+- [Geolocation & Map Guide](docs/GEOLOCATION_GUIDE.md)
+- [Auth Structure Summary](docs/AUTH_STRUCTURE_SUMMARY.md)
 
 ---
 
