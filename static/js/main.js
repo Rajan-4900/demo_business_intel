@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Crowd Heatmap - Main Application Script
  * Handles map, dashboard, and universal UI enhancements.
  */
@@ -1475,7 +1475,7 @@ async function findPopularPlaces(lat, lon, showAlert = true) {
 
             if (radiusCircle) map.removeLayer(radiusCircle);
             radiusCircle = L.circle([lat, lon], {
-                radius: 5000, color: '#2e7d32', fillColor: '#388e3c', fillOpacity: 0.12, weight: 2, dashArray: '10, 10'
+                radius: 2000, color: '#2e7d32', fillColor: '#388e3c', fillOpacity: 0.12, weight: 2, dashArray: '10, 10'
             }).addTo(map);
 
             await updateCrowdIntensityDropdown(lat, lon);
@@ -1787,7 +1787,7 @@ function renderPopularPlacesTable(places, lat, lon) {
     if (!places.length) {
         const emptyDiv = document.createElement('div');
         emptyDiv.className = 'popular-place-item';
-        emptyDiv.textContent = 'No popular places found within 5km.';
+        emptyDiv.textContent = 'No popular places found within 2km.';
         popularPlacesList.appendChild(emptyDiv);
         if (popularPlacesPanelRequested) {
             if (popularPlacesPanel.classList.contains('d-none')) {
@@ -2023,7 +2023,7 @@ function placeFeasibilityMarker(lat, lon, label) {
     businessRecommendationMarkers.push(marker);
 }
 
-// Framework: user command like "open cafe in Koramangala" -> 4.1 point location, 4.2 popular places 5km, 4.3 feasibility, 4.4 brown marker or not feasible
+// Framework: user command like "open cafe in Koramangala" -> 4.1 point location, 4.2 popular places 2km, 4.3 feasibility, 4.4 brown marker or not feasible
 async function runFeasibilityFlow(placeText, businessType) {
     try {
         const normalizedPlace = (placeText || '').toLowerCase().trim();
@@ -2085,7 +2085,7 @@ async function runFeasibilityFlow(placeText, businessType) {
         document.getElementById('id_longitude').value = lon;
         updateAccuracyMeter(85);
         showLocationError('');
-        // 4.2 Take popular places radius in 5km
+        // 4.2 Take popular places radius in 2km
         await findPopularPlaces(lat, lon, false);
         await updateCrowdIntensityDropdown(lat, lon);
         // 4.3 & 4.4 Check feasibility and place brown marker or show not feasible
@@ -3289,9 +3289,9 @@ async function updateCrowdIntensityDropdown(lat, lon) {
                     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
                 };
                 // Add heatmap overlays for high intensity areas (larger circles with gradient)
-                // Only draw circles within the 5km radius
+                // Only draw circles within the 2km radius
                 data.high_intensity.forEach(area => {
-                    if (_dist(lat, lon, area.latitude, area.longitude) > 5000) return;
+                    if (_dist(lat, lon, area.latitude, area.longitude) > 2000) return;
                     const heatmapCircle = L.circle([area.latitude, area.longitude], {
                         radius: 800,
                         color: '#1a3a6e',
@@ -3347,7 +3347,7 @@ async function updateCrowdIntensityDropdown(lat, lon) {
 
                 // Add heatmap overlays for medium intensity areas
                 data.medium_intensity.forEach(area => {
-                    if (_dist(lat, lon, area.latitude, area.longitude) > 5000) return;
+                    if (_dist(lat, lon, area.latitude, area.longitude) > 2000) return;
                     const heatmapCircle = L.circle([area.latitude, area.longitude], {
                         radius: 600,
                         color: '#1a6ea8',
@@ -3376,7 +3376,7 @@ async function updateCrowdIntensityDropdown(lat, lon) {
 
                 // Add heatmap overlays for low intensity areas
                 data.low_intensity.forEach(area => {
-                    if (_dist(lat, lon, area.latitude, area.longitude) > 5000) return;
+                    if (_dist(lat, lon, area.latitude, area.longitude) > 2000) return;
                     const heatmapCircle = L.circle([area.latitude, area.longitude], {
                         radius: 400,
                         color: '#1a7a8a',

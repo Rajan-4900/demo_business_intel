@@ -398,11 +398,11 @@ def find_popular_places(request):
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         return JsonResponse({'success': False, 'error': 'Coordinates out of range'}, status=400)
 
-    # Overpass query: nodes and ways with amenity within 5km
+    # Overpass query: nodes and ways with amenity within 2km (optimized from 5km to prevent timeouts)
     query = f"""[out:json][timeout:25];
 (
-  node["amenity"](around:5000,{lat},{lon});
-  way["amenity"](around:5000,{lat},{lon});
+  node["amenity"](around:2000,{lat},{lon});
+  way["amenity"](around:2000,{lat},{lon});
 );
 out center;
 """
@@ -435,17 +435,17 @@ def analyze_crowd_intensity(request):
             return JsonResponse({'success': False, 'message': 'Latitude and longitude are required'})
         
         try:
-            # Use Overpass API to find amenities and POIs within 5km radius
+            # Use Overpass API to find amenities and POIs within 2km radius
             query = f"""
             [out:json][bbox:6.5,68.0,37.5,97.5];
             (
-              node["amenity"](around:5000,{lat},{lon});
-              way["amenity"](around:5000,{lat},{lon});
-              relation["amenity"](around:5000,{lat},{lon});
-              node["shop"](around:5000,{lat},{lon});
-              way["shop"](around:5000,{lat},{lon});
-              node["tourism"](around:5000,{lat},{lon});
-              way["tourism"](around:5000,{lat},{lon});
+              node["amenity"](around:2000,{lat},{lon});
+              way["amenity"](around:2000,{lat},{lon});
+              relation["amenity"](around:2000,{lat},{lon});
+              node["shop"](around:2000,{lat},{lon});
+              way["shop"](around:2000,{lat},{lon});
+              node["tourism"](around:2000,{lat},{lon});
+              way["tourism"](around:2000,{lat},{lon});
             );
             out center;
             """
@@ -460,8 +460,8 @@ def analyze_crowd_intensity(request):
             # Medium intensity: 5-15 POIs per sector
             # Low intensity: < 5 POIs per sector
             
-            # Divide 5km radius into 9 sectors (3x3 grid)
-            sector_size = 5000 / 3  # ~1.67km per sector
+            # Divide 2km radius into 9 sectors (3x3 grid)
+            sector_size = 2000 / 3  # ~666m per sector
             sectors = {}
             
             for element in elements:
@@ -482,7 +482,7 @@ def analyze_crowd_intensity(request):
                 c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
                 distance = R * c
                 
-                if distance > 5000:
+                if distance > 2000:
                     continue
                 
                 # Determine sector (0-8)
@@ -631,13 +631,13 @@ def check_feasibility(request):
         query = f"""
         [out:json][bbox:6.5,68.0,37.5,97.5];
         (
-          node["amenity"](around:5000,{lat},{lon});
-          way["amenity"](around:5000,{lat},{lon});
-          relation["amenity"](around:5000,{lat},{lon});
-          node["shop"](around:5000,{lat},{lon});
-          way["shop"](around:5000,{lat},{lon});
-          node["tourism"](around:5000,{lat},{lon});
-          way["tourism"](around:5000,{lat},{lon});
+          node["amenity"](around:2000,{lat},{lon});
+          way["amenity"](around:2000,{lat},{lon});
+          relation["amenity"](around:2000,{lat},{lon});
+          node["shop"](around:2000,{lat},{lon});
+          way["shop"](around:2000,{lat},{lon});
+          node["tourism"](around:2000,{lat},{lon});
+          way["tourism"](around:2000,{lat},{lon});
         );
         out center;
         """
@@ -645,7 +645,7 @@ def check_feasibility(request):
         if error or results is None:
             return JsonResponse({'success': False, 'error': error or 'Unable to analyze location'})
         elements = results.get('elements', [])
-        sector_size = 5000 / 3
+        sector_size = 2000 / 3
         sectors = {}
         for element in elements:
             elem_lat = element.get('lat') or (element.get('center', {}).get('lat'))
@@ -660,7 +660,7 @@ def check_feasibility(request):
             a = math.sin(delta_lat/2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon/2)**2
             c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
             distance = R * c
-            if distance > 5000:
+            if distance > 2000:
                 continue
             angle = math.atan2(elem_lat - lat, elem_lon - lon)
             angle_deg = math.degrees(angle) + 180
@@ -806,13 +806,13 @@ def analyze_location(request):
 
     query = f"""[out:json][timeout:25];
 (
-  node["amenity"](around:5000,{lat},{lon});
-  way["amenity"](around:5000,{lat},{lon});
-  relation["amenity"](around:5000,{lat},{lon});
-  node["shop"](around:5000,{lat},{lon});
-  way["shop"](around:5000,{lat},{lon});
-  node["tourism"](around:5000,{lat},{lon});
-  way["tourism"](around:5000,{lat},{lon});
+  node["amenity"](around:2000,{lat},{lon});
+  way["amenity"](around:2000,{lat},{lon});
+  relation["amenity"](around:2000,{lat},{lon});
+  node["shop"](around:2000,{lat},{lon});
+  way["shop"](around:2000,{lat},{lon});
+  node["tourism"](around:2000,{lat},{lon});
+  way["tourism"](around:2000,{lat},{lon});
 );
 out center;
 """
